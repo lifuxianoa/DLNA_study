@@ -101,6 +101,11 @@ public class MainActivity extends Activity implements OnClickListener,
 			
 		case R.id.btn_reset:
 			mMediaController.stop();
+
+			mListItem.clear();
+			Message msg = new Message();
+			msg.what = REFRESH_LIST;
+			mHandler.sendMessage(msg);
 			break;
 			
 		case R.id.btn_exit:
@@ -122,7 +127,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	private void refreshDeviceList()
 	{
-		DeviceList devList = mMediaController.getDeviceList();
+		DeviceList devList = mMediaController.getServerDeviceList();
 		mListItem.clear();
 		for (int i = 0; i < devList.size(); i++) {
 			Device device = devList.getDevice(i);
@@ -142,6 +147,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	public void deviceAdded(Device dev) {
 		if (null != dev) {
 			Log.d(TAG, "deviceAdded: " + dev.getFriendlyName());
+			mMediaController.printContentDirectory(dev);
 			refreshDeviceList();
 		}
 	}
